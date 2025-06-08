@@ -1,0 +1,207 @@
+openapi: 3.0.3
+info:
+  title: MySellerPintar Open API
+  description: MySellerPintar Service
+  version: v1
+servers:
+  - url: https://test-fe.mysellerpintar.com/api
+paths:
+  /articles:
+    get:
+      tags:
+        - ArticleService
+      summary: Get Articles
+      description: Get Articles
+      operationId: ArticleService_GetArticles
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/articlesResponse"
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/v1ErrorResponse"
+    post:
+      tags:
+        - ArticleService
+      summary: Create Article
+      description: Create Article
+      operationId: ArticleService_CreateArticle
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/articlePayload"
+      responses:
+        201:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/createArticleResponse"
+        400:
+          description: Invalid input data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/v1ErrorResponse"
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/v1ErrorResponse"
+  /articles/{articleId}:
+    get:
+      tags:
+        - ArticleService
+      summary: Get Article by Id
+      description: Get Article by Id
+      operationId: ArticleService_GetArticleById
+      parameters:
+        - in: path
+          name: articleId
+          schema:
+            type: integer
+          required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/articleResponse"
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/v1ErrorResponse"
+    put:
+      tags:
+        - ArticleService
+      summary: Update Article by Id
+      description: Update Article by Id
+      operationId: ArticleService_UpdateArticleById
+      parameters:
+        - in: path
+          name: articleId
+          schema:
+            type: integer
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/articlePayload"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/updateArticleResponse"
+        400:
+          description: Invalid input data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/v1ErrorResponse"
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/v1ErrorResponse"
+components:
+  schemas:
+    v1ErrorResponse:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          format: int32
+        message:
+          type: string
+    categoryData:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        userId:
+          type: string
+    userData:
+      type: object
+      properties:
+        id:
+          type: string
+        username:
+          type: string
+        role:
+          type: string
+    articleData:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        content:
+          type: string
+        userId:
+          type: string
+        categoryId:
+          type: string
+        category:
+          allOf:
+            - $ref: "#/components/schemas/categoryData"
+        user:
+          allOf:
+            - $ref: "#/components/schemas/userData"
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+    articlePayload:
+      type: object
+      properties:
+        title:
+          type: string
+        content:
+          type: string
+        categoryId:
+          type: string
+    articlesResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/articleData"
+        total:
+          type: integer
+          format: int32
+        page:
+          type: integer
+          format: int32
+        limit:
+          type: integer
+          format: int32
+    articleResponse:
+      allOf:
+        - $ref: "#/components/schemas/articleData"
+    createArticleResponse:
+      allOf:
+        - $ref: "#/components/schemas/articleData"
+    updateArticleResponse:
+      allOf:
+        - $ref: "#/components/schemas/articleData"

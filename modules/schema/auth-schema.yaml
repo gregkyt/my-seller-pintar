@@ -1,0 +1,129 @@
+openapi: 3.0.3
+info:
+  title: MySellerPintar Open API
+  description: MySellerPintar Service
+  version: v1
+servers:
+  - url: https://test-fe.mysellerpintar.com/api
+paths:
+  /auth/register:
+    post:
+      tags:
+        - AuthService
+      summary: Register
+      description: Register
+      operationId: AuthService_Register
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/registerPayload"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/registerResponse"
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/v1ErrorResponse"
+  /auth/login:
+    post:
+      tags:
+        - AuthService
+      summary: Login
+      description: Login
+      operationId: AuthService_Login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/loginPayload"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/loginResponse"
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/v1ErrorResponse"
+  /auth/profile:
+    get:
+      tags:
+        - AuthService
+      summary: Get Profile
+      description: Get Profile
+      operationId: AuthService_GetProfile
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/profileResponse"
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/v1ErrorResponse"
+components:
+  schemas:
+    v1ErrorResponse:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          format: int32
+        message:
+          type: string
+    registerPayload:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+        role:
+          type: string
+    registerData:
+      allOf:
+        - $ref: "#/components/schemas/registerPayload"
+    registerResponse:
+      allOf:
+        - $ref: "#/components/schemas/registerData"
+    loginPayload:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+    loginData:
+      type: object
+      properties:
+        token:
+          type: string
+    loginResponse:
+      allOf:
+        - $ref: "#/components/schemas/loginData"
+    profileResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        username:
+          type: string
+        role:
+          type: string

@@ -1,0 +1,175 @@
+openapi: 3.0.3
+info:
+  title: MySellerPintar Open API
+  description: MySellerPintar Service
+  version: v1
+servers:
+  - url: https://test-fe.mysellerpintar.com/api
+paths:
+  /categoriess:
+    get:
+      tags:
+        - CategoriesService
+      summary: Get Categories
+      description: Get Categories
+      operationId: CategoriesService_GetCategories
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/categoriesResponse"
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/v1ErrorResponse"
+    post:
+      tags:
+        - CategoriesService
+      summary: Create Categories
+      description: Create Categories
+      operationId: CategoriesService_CreateCategories
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/categoryPayload"
+      responses:
+        201:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/createCategoryResponse"
+        400:
+          description: Invalid input data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/v1ErrorResponse"
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/v1ErrorResponse"
+  /categoriess/{categoriesId}:
+    get:
+      tags:
+        - CategoriesService
+      summary: Get Categories by Id
+      description: Get Categories by Id
+      operationId: CategoriesService_GetCategoriesById
+      parameters:
+        - in: path
+          name: categoriesId
+          schema:
+            type: integer
+          required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/categoryResponse"
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/v1ErrorResponse"
+    put:
+      tags:
+        - CategoriesService
+      summary: Update Categories by Id
+      description: Update Categories by Id
+      operationId: CategoriesService_UpdateCategoriesById
+      parameters:
+        - in: path
+          name: categoriesId
+          schema:
+            type: integer
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/categoryPayload"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/updateCategoryResponse"
+        400:
+          description: Invalid input data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/v1ErrorResponse"
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/v1ErrorResponse"
+components:
+  schemas:
+    v1ErrorResponse:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          format: int32
+        message:
+          type: string
+    categoryData:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        userId:
+          type: string
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+    categoryPayload:
+      type: object
+      properties:
+        name:
+          type: string
+    categoriesResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/categoryData"
+        totalData:
+          type: integer
+          format: int32
+        currentPage:
+          type: integer
+          format: int32
+        totalPages:
+          type: integer
+          format: int32
+    categoryResponse:
+      allOf:
+        - $ref: "#/components/schemas/categoryData"
+    createCategoryResponse:
+      allOf:
+        - $ref: "#/components/schemas/categoryData"
+    updateCategoryResponse:
+      allOf:
+        - $ref: "#/components/schemas/categoryData"
