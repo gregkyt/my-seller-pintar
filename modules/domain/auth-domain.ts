@@ -198,3 +198,14 @@ export interface operations {
     };
   };
 }
+
+export type V1ErrorResponse = components["schemas"]["v1ErrorResponse"];
+export type ProfileResponse = components["schemas"]["profileResponse"];
+export type RegisterResponse = components["schemas"]["registerResponse"];
+export type LoginResponse = components["schemas"]["loginResponse"];
+
+export type RegisterData = components["schemas"]["registerData"];
+export type LoginData = components["schemas"]["loginData"];
+
+export type RegisterPayload = components["schemas"]["registerPayload"];
+export type LoginPayload = components["schemas"]["loginPayload"];

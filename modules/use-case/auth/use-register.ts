@@ -1,26 +1,27 @@
 import {
-  UserReposResponse,
+  RegisterPayload,
+  RegisterResponse,
   V1ErrorResponse,
-} from "@/modules/domain/user-domain";
-import UserRepository from "../../repository/user-repository";
+} from "@/modules/domain/auth-domain";
+import UserRepository from "../../repository/auth-repository";
 import BaseUseCase from "../base-use-case";
 
-interface IUseGetUserRepos {
-  username: string;
+interface IUseRegister {
+  payload: RegisterPayload;
   onStart: () => void;
-  onSuccess: (data: UserReposResponse) => void;
+  onSuccess: (data: RegisterResponse) => void;
   onError?: (error: V1ErrorResponse) => void;
 }
 
-export default class UseGetUserRepos implements BaseUseCase {
+export default class UseRegister implements BaseUseCase {
   repository = new UserRepository();
-  username: string;
+  payload: RegisterPayload;
   onStart: () => void;
-  onSuccess: (data: UserReposResponse) => void;
+  onSuccess: (data: RegisterResponse) => void;
   onError?: (error: V1ErrorResponse) => void;
 
-  constructor({ username, onStart, onSuccess, onError }: IUseGetUserRepos) {
-    this.username = username;
+  constructor({ payload, onStart, onSuccess, onError }: IUseRegister) {
+    this.payload = payload;
     this.onStart = onStart;
     this.onSuccess = onSuccess;
     this.onError = onError;
@@ -29,7 +30,7 @@ export default class UseGetUserRepos implements BaseUseCase {
   async execute() {
     this.onStart();
     try {
-      const { data } = await this.repository.retrieveUserRepos(this.username);
+      const { data } = await this.repository.register(this.payload);
       this.onSuccess(data);
     } catch (error) {
       if (typeof this.onError === "function") {
