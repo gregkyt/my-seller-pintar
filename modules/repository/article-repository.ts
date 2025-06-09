@@ -1,15 +1,16 @@
 import { api } from "@/plugins/axios";
+import { toQueryParam } from "@/utils/utils";
 import {
   ArticlePayload,
   ArticleResponse,
   ArticlesResponse,
   CreateArticleResponse,
+  UpdateArticleResponse,
 } from "../domain/article-domain";
-import { RegisterResponse } from "../domain/auth-domain";
 
 export default class ArticleRepository {
-  async retrieveArticles() {
-    return api.get<ArticlesResponse>(`/articles`);
+  async retrieveArticles(queryParam?: Record<string, any>) {
+    return api.get<ArticlesResponse>(`/articles?${toQueryParam(queryParam)}`);
   }
 
   async retrieveArticle(id: string) {
@@ -21,6 +22,10 @@ export default class ArticleRepository {
   }
 
   async updateArticle(id: string, payload: ArticlePayload) {
-    return api.put<RegisterResponse>(`/articles/${id}`, payload);
+    return api.put<UpdateArticleResponse>(`/articles/${id}`, payload);
+  }
+
+  async getArticleImage(url: string) {
+    return api.get(url);
   }
 }

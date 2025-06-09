@@ -1,15 +1,18 @@
 import { api } from "@/plugins/axios";
-import { RegisterResponse } from "../domain/auth-domain";
+import { toQueryParam } from "@/utils/utils";
 import {
   CategoriesResponse,
   CategoryPayload,
   CategoryResponse,
   CreateCategoryResponse,
+  UpdateCategoryResponse,
 } from "../domain/category-domain";
 
 export default class CategoryRepository {
-  async retrieveCategories() {
-    return api.get<CategoriesResponse>(`/categories`);
+  async retrieveCategories(queryParam?: Record<string, any>) {
+    return api.get<CategoriesResponse>(
+      `/categories?${toQueryParam(queryParam)}`
+    );
   }
 
   async retrieveCategory(id: string) {
@@ -21,6 +24,6 @@ export default class CategoryRepository {
   }
 
   async updateCategory(id: string, payload: CategoryPayload) {
-    return api.put<RegisterResponse>(`/categories/${id}`, payload);
+    return api.put<UpdateCategoryResponse>(`/categories/${id}`, payload);
   }
 }

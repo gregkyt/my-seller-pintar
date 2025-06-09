@@ -59,14 +59,6 @@ export interface components {
     v1ErrorResponse: {
       error?: string;
     };
-    v1MetaResponse: {
-      /** Format: int32 */
-      total?: number;
-      /** Format: int32 */
-      page?: number;
-      /** Format: int32 */
-      limit?: number;
-    };
     categoryData: {
       id?: string;
       name?: string;
@@ -81,6 +73,7 @@ export interface components {
       id?: string;
       title?: string;
       content?: string;
+      imageUrl?: string;
       userId?: string;
       categoryId?: string;
       category?: components["schemas"]["categoryData"];
