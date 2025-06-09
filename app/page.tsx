@@ -1,6 +1,83 @@
-import Image from "next/image";
+// import Image from "next/image";
+
+"use client";
+
+import TextInput from "@/components/text-input";
+import { FetchStatus } from "@/constants/fetch-status";
+import { LoginFormData, LoginSchema } from "@/forms/login";
+import { LoginPayload } from "@/modules/domain/auth-domain";
+import { createAuthStore } from "@/stores/auth-store";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
 
 export default function Home() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginFormData>({
+    resolver: zodResolver(LoginSchema),
+  });
+
+  const { loginData, fetchStatusButton, message, login, setFetchStatusButton } =
+    createAuthStore();
+
+  const router = useRouter();
+
+  useEffect(() => {
+    if (fetchStatusButton === FetchStatus.SUCCESS && loginData) {
+      router.replace("/home");
+    }
+  }, [fetchStatusButton]);
+
+  function onSubmit(data: LoginFormData) {
+    const payload = data as LoginPayload;
+    login(payload);
+  }
+
+  function goToRegister() {
+    router.push("/register");
+  }
+
+  return (
+    <div className="p-4 flex h-screen justify-center">
+      <div className="flex flex-col justify-center">
+        <label className="font-bold text-2xl text-center">Login</label>
+        <form
+          className="flex flex-col gap-2 mt-4"
+          onSubmit={handleSubmit(onSubmit)}
+        >
+          <TextInput
+            label="Username"
+            placeholder="Input username..."
+            error={errors.username?.message}
+            register={register("username")}
+          />
+          <TextInput
+            label="Password"
+            placeholder="Input password..."
+            type="password"
+            error={errors.password?.message}
+            register={register("password")}
+          />
+          <div className="flex items-center justify-end">
+            <span>Don&apos;t have account? </span>
+            <button className="btn btn-link" onClick={goToRegister}>
+              Register
+            </button>
+          </div>
+          <button className="btn" type="submit">
+            Login
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+/*export default function Home() {
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
@@ -98,4 +175,4 @@ export default function Home() {
       </footer>
     </div>
   );
-}
+}*/
