@@ -1,5 +1,7 @@
+import { Cookies } from "@/constants/cookie";
 import { V1ErrorResponse } from "@/modules/domain/auth-domain";
 import axios, { AxiosError } from "axios";
+import { getCookie } from "cookies-next";
 
 const baseURL = process.env.NEXT_PUBLIC_SERVICE_BASE_URL;
 const api = axios.create({
@@ -11,7 +13,7 @@ const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem("token");
+  const token = getCookie(Cookies.token);
   if (token) {
     config.headers["Authorization"] = `Bearer ${token}`;
   }
