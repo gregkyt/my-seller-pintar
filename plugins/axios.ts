@@ -14,6 +14,12 @@ const api = axios.create({
 
 api.interceptors.request.use((config) => {
   const token = getCookie(Cookies.token);
+  const url = config.url;
+
+  if (url?.includes("upload")) {
+    config.headers["Content-Type"] = "multipart/form-data";
+  }
+
   if (token) {
     config.headers["Authorization"] = `Bearer ${token}`;
   }

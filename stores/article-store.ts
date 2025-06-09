@@ -27,12 +27,7 @@ export type ArticleState = {
   article: ArticleData;
   articles: ArticleData[];
   articlesMeta?: ArticlesMeta;
-  articlesFormData: Record<string, any>;
-
-  createArticleFormData: Record<string, any>;
-  createArticleErrorData: Record<string, any>;
-  updateArticleFormData: Record<string, any>;
-  updateArticleErrorData: Record<string, any>;
+  previewArticle: ArticlePayload;
 
   queryParam: QueryParam;
   fetchStatusPage: FetchStatus;
@@ -47,15 +42,10 @@ export type ArticleActions = {
   updateArticle: (id: string, payload: ArticlePayload) => void;
 
   resetAll: () => void;
+  setPreviewArticle: (payload: ArticlePayload) => void;
   setQueryParam: (queryParam?: QueryParam) => void;
   setFetchStatusPage: (fetchStatus: FetchStatus) => void;
   setFetchStatusButton: (fetchStatus: FetchStatus) => void;
-
-  setArticlesFormData: (formData: Record<string, any>) => void;
-  setCreateArticleFormData: (formData: Record<string, any>) => void;
-  setCreateArticleErrorData: (errorData: Record<string, any>) => void;
-  setUpdateArticleFormData: (formData: Record<string, any>) => void;
-  setUpdateArticleErrorData: (errorData: Record<string, any>) => void;
 };
 
 export type ArticleStore = ArticleState & ArticleActions;
@@ -63,12 +53,7 @@ export type ArticleStore = ArticleState & ArticleActions;
 export const defaultInitState: ArticleState = {
   article: {},
   articles: [],
-  articlesFormData: {},
-
-  createArticleFormData: {},
-  createArticleErrorData: {},
-  updateArticleFormData: {},
-  updateArticleErrorData: {},
+  previewArticle: {},
 
   queryParam: { page: 1, limit: 10 },
   fetchStatusPage: FetchStatus.IDLE,
@@ -179,6 +164,11 @@ export const createArticleStore = create<ArticleStore>()(
           ...defaultInitState,
         }));
       },
+      setPreviewArticle(payload) {
+        set(() => ({
+          previewArticle: payload,
+        }));
+      },
       setQueryParam(queryParam) {
         set(() => ({
           queryParam: queryParam,
@@ -194,31 +184,6 @@ export const createArticleStore = create<ArticleStore>()(
         set((state) => ({
           fetchStatusButton: fetchStatusButton,
           message: fetchStatusButton === FetchStatus.IDLE ? "" : state.message,
-        }));
-      },
-      setArticlesFormData(articlesFormData) {
-        set(() => ({
-          articlesFormData: articlesFormData,
-        }));
-      },
-      setCreateArticleFormData(createArticleFormData) {
-        set(() => ({
-          createArticleFormData: createArticleFormData,
-        }));
-      },
-      setCreateArticleErrorData(createArticleErrorData) {
-        set(() => ({
-          createArticleErrorData: createArticleErrorData,
-        }));
-      },
-      setUpdateArticleFormData(updateArticleFormData) {
-        set(() => ({
-          updateArticleFormData: updateArticleFormData,
-        }));
-      },
-      setUpdateArticleErrorData(updateArticleErrorData) {
-        set(() => ({
-          updateArticleErrorData: updateArticleErrorData,
         }));
       },
     }),

@@ -1,6 +1,7 @@
 "use client";
 
 import Button from "@/components/button";
+import Loading from "@/components/loading";
 import TextInput from "@/components/text-input";
 import Toast, { ToastType } from "@/components/toast";
 import { FetchStatus } from "@/constants/fetch-status";
@@ -23,7 +24,6 @@ export default function CategoryDetail() {
   });
 
   const {
-    category,
     message,
     fetchStatusPage,
     fetchStatusButton,
@@ -52,6 +52,7 @@ export default function CategoryDetail() {
     }
   }
 
+  if (isLoading) return <Loading />;
   return (
     <div className="p-4">
       <label className="font-bold text-2xl text-center">Edit Category</label>

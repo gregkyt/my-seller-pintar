@@ -38,15 +38,11 @@ export default function Container({ children }: { children: React.ReactNode }) {
   }, []);
 
   const renderMenu = () => {
-    const urls = pathname.split("/");
-    const selectedMenu = `/${urls[3]}`;
-
     return menu.map((item, index) => {
       return (
         <li key={index}>
           <a
             className={`hover:text-brand-blue hover:bg-white ${
-              // selectedMenu === item.id ? "font-bold" : ""
               pathname.includes(item.id) ? "font-bold" : ""
             }`}
             href={item.id}

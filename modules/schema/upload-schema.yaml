@@ -1,0 +1,52 @@
+openapi: 3.0.3
+info:
+  title: MySellerPintar Open API
+  description: MySellerPintar Service
+  version: v1
+servers:
+  - url: https://test-fe.mysellerpintar.com/api
+paths:
+  /upload:
+    post:
+      tags:
+        - UploadService
+      summary: Upload
+      description: Upload
+      operationId: AuthService_Upload
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/uploadPayload"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/uploadResponse"
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/v1ErrorResponse"
+components:
+  schemas:
+    v1ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+    uploadPayload:
+      type: object
+      properties:
+        image:
+          type: string
+          format: binary
+    uploadResponse:
+      type: object
+      properties:
+        image:
+          type: string
