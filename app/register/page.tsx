@@ -30,7 +30,7 @@ export default function Register() {
   });
 
   const {
-    loginData,
+    profileData,
     fetchStatusButton,
     message,
     register: createUser,
@@ -40,11 +40,10 @@ export default function Register() {
   const router = useRouter();
 
   useEffect(() => {
-    console.log(loginData);
-    if (fetchStatusButton === FetchStatus.SUCCESS && loginData) {
-      router.replace("/home");
+    if (fetchStatusButton === FetchStatus.SUCCESS && profileData) {
+      router.replace("/articles");
     }
-  }, [loginData]);
+  }, [profileData]);
 
   function onSubmit(data: RegisterFormData) {
     const payload = data as RegisterPayload;
@@ -76,7 +75,11 @@ export default function Register() {
             register={register("role")}
             value={watch("role")}
             data={data}
-            onChange={(e) => setValue("role", e.target.value)}
+            onChange={(e) => {
+              const value =
+                data.find((item) => item.id === e.target.value)?.value ?? "";
+              setValue("role", value);
+            }}
           />
           <Button
             className="mt-4"

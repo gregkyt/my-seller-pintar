@@ -5,8 +5,4 @@ enum FetchStatus {
   ERROR,
 }
 
-const LocalStorage = {
-  token: "token",
-};
-
-export { FetchStatus, LocalStorage };
+export { FetchStatus };

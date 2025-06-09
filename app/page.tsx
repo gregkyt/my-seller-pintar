@@ -3,6 +3,7 @@
 "use client";
 
 import TextInput from "@/components/text-input";
+import Toast, { ToastType } from "@/components/toast";
 import { FetchStatus } from "@/constants/fetch-status";
 import { LoginFormData, LoginSchema } from "@/forms/login";
 import { LoginPayload } from "@/modules/domain/auth-domain";
@@ -21,16 +22,21 @@ export default function Home() {
     resolver: zodResolver(LoginSchema),
   });
 
-  const { loginData, fetchStatusButton, message, login, setFetchStatusButton } =
-    createAuthStore();
+  const {
+    message,
+    profileData,
+    fetchStatusButton,
+    login,
+    setFetchStatusButton,
+  } = createAuthStore();
 
   const router = useRouter();
 
   useEffect(() => {
-    if (fetchStatusButton === FetchStatus.SUCCESS && loginData) {
-      router.replace("/home");
+    if (fetchStatusButton === FetchStatus.SUCCESS && profileData) {
+      router.replace("/articles");
     }
-  }, [fetchStatusButton]);
+  }, [profileData]);
 
   function onSubmit(data: LoginFormData) {
     const payload = data as LoginPayload;
@@ -72,6 +78,16 @@ export default function Home() {
             Login
           </button>
         </form>
+        <Toast
+          isOpen={fetchStatusButton === FetchStatus.ERROR}
+          text={message}
+          type={
+            fetchStatusButton === FetchStatus.ERROR
+              ? ToastType.ERROR
+              : ToastType.SUCCESS
+          }
+          onHide={() => setFetchStatusButton(FetchStatus.IDLE)}
+        />
       </div>
     </div>
   );
