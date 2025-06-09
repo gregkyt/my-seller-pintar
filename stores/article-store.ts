@@ -1,0 +1,233 @@
+import { FetchStatus } from "@/constants/fetch-status";
+import { LocalStorage } from "@/constants/local-storage";
+import { ArticleData, ArticlePayload } from "@/modules/domain/article-domain";
+import UseGetArticle from "@/modules/use-case/article/use-get-article";
+import UseGetArticles from "@/modules/use-case/article/use-get-articles";
+import UsePostArticle from "@/modules/use-case/article/use-post-article";
+import UsePutArticle from "@/modules/use-case/article/use-put-article";
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
+
+export interface QueryParam {
+  page: number;
+  limit: number;
+  title?: string;
+  category?: string;
+  sortBy?: string;
+  sortOrder?: string;
+}
+
+export type ArticlesMeta = {
+  total?: number;
+  page?: number;
+  limit?: number;
+};
+
+export type ArticleState = {
+  article: ArticleData;
+  articles: ArticleData[];
+  articlesMeta?: ArticlesMeta;
+  articlesFormData: Record<string, any>;
+
+  createArticleFormData: Record<string, any>;
+  createArticleErrorData: Record<string, any>;
+  updateArticleFormData: Record<string, any>;
+  updateArticleErrorData: Record<string, any>;
+
+  queryParam: QueryParam;
+  fetchStatusPage: FetchStatus;
+  fetchStatusButton: FetchStatus;
+  message: string;
+};
+
+export type ArticleActions = {
+  getArticle: (id: string) => void;
+  getArticles: (queryParam?: QueryParam) => void;
+  createArticle: (payload: ArticlePayload) => void;
+  updateArticle: (id: string, payload: ArticlePayload) => void;
+
+  resetAll: () => void;
+  setQueryParam: (queryParam?: QueryParam) => void;
+  setFetchStatusPage: (fetchStatus: FetchStatus) => void;
+  setFetchStatusButton: (fetchStatus: FetchStatus) => void;
+
+  setArticlesFormData: (formData: Record<string, any>) => void;
+  setCreateArticleFormData: (formData: Record<string, any>) => void;
+  setCreateArticleErrorData: (errorData: Record<string, any>) => void;
+  setUpdateArticleFormData: (formData: Record<string, any>) => void;
+  setUpdateArticleErrorData: (errorData: Record<string, any>) => void;
+};
+
+export type ArticleStore = ArticleState & ArticleActions;
+
+export const defaultInitState: ArticleState = {
+  article: {},
+  articles: [],
+  articlesFormData: {},
+
+  createArticleFormData: {},
+  createArticleErrorData: {},
+  updateArticleFormData: {},
+  updateArticleErrorData: {},
+
+  queryParam: { page: 1, limit: 10 },
+  fetchStatusPage: FetchStatus.IDLE,
+  fetchStatusButton: FetchStatus.IDLE,
+  message: "",
+};
+
+export const createArticleStore = create<ArticleStore>()(
+  persist(
+    (set) => ({
+      ...defaultInitState,
+      getArticles: (queryParam) => {
+        new UseGetArticles({
+          queryParam,
+          onStart: () => {
+            set(() => ({
+              fetchStatusPage: FetchStatus.LOADING,
+            }));
+          },
+          onSuccess: (data) => {
+            set(() => ({
+              articles: data?.data,
+              articlesMeta: {
+                page: data.page,
+                limit: data.limit,
+                total: data.total,
+              },
+              fetchStatusPage: FetchStatus.SUCCESS,
+            }));
+          },
+          onError: (error) => {
+            set(() => ({
+              message: error.error,
+              fetchStatusPage: FetchStatus.ERROR,
+            }));
+          },
+        }).execute();
+      },
+      getArticle(id) {
+        new UseGetArticle({
+          id,
+          onStart: () => {
+            set(() => ({
+              fetchStatusPage: FetchStatus.LOADING,
+            }));
+          },
+          onSuccess: (data) => {
+            set(() => ({
+              article: data,
+              fetchStatusPage: FetchStatus.SUCCESS,
+            }));
+          },
+          onError: (error) => {
+            set(() => ({
+              message: error.error,
+              fetchStatusPage: FetchStatus.ERROR,
+            }));
+          },
+        }).execute();
+      },
+      createArticle(payload) {
+        new UsePostArticle({
+          payload,
+          onStart: () => {
+            set(() => ({
+              fetchStatusButton: FetchStatus.LOADING,
+            }));
+          },
+          onSuccess: (data) => {
+            set(() => ({
+              article: data,
+              fetchStatusButton: FetchStatus.SUCCESS,
+            }));
+          },
+          onError: (error) => {
+            set(() => ({
+              message: error.error,
+              fetchStatusButton: FetchStatus.ERROR,
+            }));
+          },
+        }).execute();
+      },
+      updateArticle(id, payload) {
+        new UsePutArticle({
+          id,
+          payload,
+          onStart: () => {
+            set(() => ({
+              fetchStatusButton: FetchStatus.LOADING,
+            }));
+          },
+          onSuccess: (data) => {
+            set(() => ({
+              article: data,
+              fetchStatusButton: FetchStatus.SUCCESS,
+            }));
+          },
+          onError: (error) => {
+            set(() => ({
+              message: error.error,
+              fetchStatusButton: FetchStatus.ERROR,
+            }));
+          },
+        }).execute();
+      },
+      resetAll() {
+        set(() => ({
+          ...defaultInitState,
+        }));
+      },
+      setQueryParam(queryParam) {
+        set(() => ({
+          queryParam: queryParam,
+        }));
+      },
+      setFetchStatusPage(fetchStatusPage) {
+        set((state) => ({
+          fetchStatusPage: fetchStatusPage,
+          message: fetchStatusPage === FetchStatus.IDLE ? "" : state.message,
+        }));
+      },
+      setFetchStatusButton(fetchStatusButton) {
+        set((state) => ({
+          fetchStatusButton: fetchStatusButton,
+          message: fetchStatusButton === FetchStatus.IDLE ? "" : state.message,
+        }));
+      },
+      setArticlesFormData(articlesFormData) {
+        set(() => ({
+          articlesFormData: articlesFormData,
+        }));
+      },
+      setCreateArticleFormData(createArticleFormData) {
+        set(() => ({
+          createArticleFormData: createArticleFormData,
+        }));
+      },
+      setCreateArticleErrorData(createArticleErrorData) {
+        set(() => ({
+          createArticleErrorData: createArticleErrorData,
+        }));
+      },
+      setUpdateArticleFormData(updateArticleFormData) {
+        set(() => ({
+          updateArticleFormData: updateArticleFormData,
+        }));
+      },
+      setUpdateArticleErrorData(updateArticleErrorData) {
+        set(() => ({
+          updateArticleErrorData: updateArticleErrorData,
+        }));
+      },
+    }),
+    {
+      name: LocalStorage.articles,
+      partialize: (state) => ({
+        articles: state.articles,
+        article: state.article,
+      }),
+    }
+  )
+);
