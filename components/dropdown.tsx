@@ -64,6 +64,7 @@ export default function Dropdown({
               error && "input-error"
             }`}
             onFocus={() => onChangeText(text)}
+            value={value}
             {...register}
             {...props}
           />
@@ -81,7 +82,7 @@ export default function Dropdown({
                         setText(item.value);
                         setIsOpen(false);
                         props.onChange?.({
-                          target: { value: item.value },
+                          target: { value: item.id },
                         } as any);
                       }}
                     >
