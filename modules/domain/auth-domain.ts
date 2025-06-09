@@ -69,9 +69,7 @@ export type webhooks = Record<string, never>;
 export interface components {
   schemas: {
     v1ErrorResponse: {
-      /** Format: int32 */
-      statusCode?: number;
-      message?: string;
+      error?: string;
     };
     registerPayload: {
       username?: string;

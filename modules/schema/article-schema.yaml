@@ -125,10 +125,7 @@ components:
     v1ErrorResponse:
       type: object
       properties:
-        statusCode:
-          type: integer
-          format: int32
-        message:
+        error:
           type: string
     categoryData:
       type: object
