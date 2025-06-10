@@ -16,6 +16,8 @@ pnpm run dev
 
 Open [http://localhost:3005](http://localhost:3005) with your browser to see the result.
 
+Deployed to Vercel [https://my-seller-pintar.vercel.app/](https://my-seller-pintar.vercel.app/) with your browser to see the result
+
 ## Unit Test
 
 To run all unit test
