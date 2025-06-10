@@ -192,6 +192,7 @@ export const createArticleStore = create<ArticleStore>()(
       partialize: (state) => ({
         articles: state.articles,
         article: state.article,
+        previewArticle: state.previewArticle,
       }),
     }
   )
