@@ -9,6 +9,7 @@ const ArticleSchema = z.object({
   title: z.string().min(1, { message: "Required " }),
   content: z.string().min(1, { message: "Required " }),
   categoryId: z.string().min(1, { message: "Required " }),
+  imageUrl: z.string().url({ message: "Required" }),
 });
 
 type ArticlesFormData = z.infer<typeof ArticlesSchema>;

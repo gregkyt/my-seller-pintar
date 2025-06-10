@@ -35,7 +35,7 @@ export interface components {
       image?: string;
     };
     uploadResponse: {
-      image?: string;
+      imageUrl?: string;
     };
   };
   responses: never;

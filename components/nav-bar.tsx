@@ -19,11 +19,12 @@ export default function NavBar() {
   function onLogout() {
     logout(() => {
       deleteCookie(Cookies.token);
+      deleteCookie(Cookies.profile);
       resetAllArticle();
       resetAllCategory();
       resetAllAuth();
 
-      router.refresh();
+      router.replace("/");
     });
   }
 

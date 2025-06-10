@@ -1,19 +1,6 @@
 import { InputHTMLAttributes, useRef } from "react";
 import { UseFormRegisterReturn } from "react-hook-form";
 
-// interface FileInputProps {
-//   id?: string | undefined;
-//   className?: string;
-//   label?: string;
-//   isRequired?: boolean;
-//   file?: File;
-//   placeholder?: string;
-//   error?: string;
-//   info?: string;
-//   success?: string;
-//   onChangeFile?: (file: File) => void;
-// }
-
 type FileInputProps = {
   file?: File;
   label?: string;
@@ -25,7 +12,7 @@ type FileInputProps = {
 
 export default function FileInput({
   required,
-  file,
+  value,
   label,
   error,
   info,
@@ -34,19 +21,6 @@ export default function FileInput({
   register,
   ...props
 }: FileInputProps) {
-  // const {
-  //   id,
-  //   className,
-  //   label,
-  //   isRequired,
-  //   file,
-  //   placeholder,
-  //   error,
-  //   info,
-  //   success,
-  //   onChangeFile,
-  // } = props;
-
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   function onClickButton() {
@@ -56,26 +30,19 @@ export default function FileInput({
   const renderInput = () => {
     return (
       <div className="flex items-center gap-2">
-        <button className="btn" onClick={() => onClickButton()}>
+        <button type="button" className="btn" onClick={() => onClickButton()}>
           {placeholder}
         </button>
-        {file ? <label className="text-sm">{file.name}</label> : null}
+        {value ? <label className="text-sm text-success">{value}</label> : null}
         <input
-          ref={fileInputRef}
-          // ref={(e) => {
-          //   fileInputRef.current = e;
-          //   register.ref(e);
-          // }}
+          {...register}
+          ref={(e) => {
+            fileInputRef.current = e;
+          }}
           className="hidden"
           type="file"
           accept=".png, .jpg, .jpeg"
-          {...register}
           {...props}
-          // onChange={(e) => {
-          //   if (e.target.files) {
-          //     if (onChangeFile) onChangeFile(e.target.files[0]);
-          //   }
-          // }}
         />
       </div>
     );

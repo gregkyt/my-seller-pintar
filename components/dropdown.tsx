@@ -46,7 +46,6 @@ export default function Dropdown({
   }, [value]);
 
   function onChangeText(text: string) {
-    console.log("here");
     setIsOpen(true);
     setText(text);
     setSuggestions(data);

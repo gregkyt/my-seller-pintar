@@ -85,6 +85,7 @@ export interface components {
       title?: string;
       content?: string;
       categoryId?: string;
+      imageUrl?: string;
     };
     articlesResponse: {
       data?: components["schemas"]["articleData"][];

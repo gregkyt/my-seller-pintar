@@ -2,6 +2,7 @@
 
 import Button from "@/components/button";
 import Dropdown, { getDropdownData } from "@/components/dropdown";
+import FileInput from "@/components/file-input";
 import TextArea from "@/components/text-area";
 import TextInput from "@/components/text-input";
 import { FetchStatus } from "@/constants/fetch-status";
@@ -9,6 +10,7 @@ import { ArticleFormData, ArticleSchema } from "@/forms/articles";
 import { ArticlePayload } from "@/modules/domain/article-domain";
 import { createArticleStore } from "@/stores/article-store";
 import { createCategoryStore } from "@/stores/category-store";
+import { createUploadStore } from "@/stores/upload-store";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -28,15 +30,22 @@ export default function ArticleAdd() {
   const router = useRouter();
   const { fetchStatusButton, setPreviewArticle } = createArticleStore();
   const { categories, getCategories } = createCategoryStore();
+  const { uploadData, upload } = createUploadStore();
 
   useEffect(() => {
     getCategories();
   }, []);
 
+  useEffect(() => {
+    if (uploadData) {
+      setValue("imageUrl", uploadData.imageUrl ?? "");
+    }
+  }, [uploadData]);
+
   function onSubmit(data: ArticleFormData) {
     const payload = data as ArticlePayload;
     setPreviewArticle(payload);
-    router.push("/articles/add/preview");
+    router.push("/articles/preview");
   }
 
   return (
@@ -60,6 +69,18 @@ export default function ArticleAdd() {
           data={getDropdownData(categories)}
           onChange={(e) => {
             setValue("categoryId", e.target.value);
+          }}
+        />
+        <FileInput
+          label="Upload"
+          placeholder="Choose File"
+          value={watch("imageUrl")}
+          register={register("imageUrl")}
+          onChange={(e) => {
+            const files = e.target.files;
+            if (files) {
+              upload(files[0]);
+            }
           }}
         />
         <TextArea

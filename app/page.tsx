@@ -2,6 +2,7 @@
 
 "use client";
 
+import Button from "@/components/button";
 import TextInput from "@/components/text-input";
 import Toast, { ToastType } from "@/components/toast";
 import { FetchStatus } from "@/constants/fetch-status";
@@ -68,16 +69,14 @@ export default function Home() {
             error={errors.password?.message}
             register={register("password")}
           />
-          <div className="flex items-center justify-end">
-            <span>Don&apos;t have account? </span>
-            <button className="btn btn-link" onClick={goToRegister}>
-              Register
-            </button>
-          </div>
-          <button className="btn" type="submit">
-            Login
-          </button>
+          <Button label="Login" className="btn mt-4" type="submit" />
         </form>
+        <div className="flex items-center justify-end mt-4">
+          <span>Don&apos;t have account? </span>
+          <button className="btn btn-link" onClick={goToRegister}>
+            Register
+          </button>
+        </div>
         <Toast
           isOpen={fetchStatusButton === FetchStatus.ERROR}
           text={message}
