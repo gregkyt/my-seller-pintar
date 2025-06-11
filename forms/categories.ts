@@ -5,7 +5,7 @@ const CategoriesSchema = z.object({
 });
 
 const CategorySchema = z.object({
-  name: z.string().min(1, { message: "Required " }),
+  name: z.string().min(1, { message: "Category field cannot be empty" }),
 });
 
 type CategoriesFormData = z.infer<typeof CategoriesSchema>;

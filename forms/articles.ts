@@ -6,10 +6,10 @@ const ArticlesSchema = z.object({
 });
 
 const ArticleSchema = z.object({
-  title: z.string().min(1, { message: "Required " }),
-  content: z.string().min(1, { message: "Required " }),
-  categoryId: z.string().min(1, { message: "Required " }),
-  imageUrl: z.string().url({ message: "Required" }),
+  title: z.string().min(1, { message: "Please enter title" }),
+  content: z.string().min(1, { message: "Content field cannot be empty" }),
+  categoryId: z.string().min(1, { message: "Please select category" }),
+  imageUrl: z.string().url({ message: "Please enter picture" }),
 });
 
 type ArticlesFormData = z.infer<typeof ArticlesSchema>;

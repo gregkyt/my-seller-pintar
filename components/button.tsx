@@ -68,7 +68,7 @@ export default function Button({
   return (
     <button
       disabled={disabled || isLoading}
-      className={`btn ${combinedClassName()}`}
+      className={`btn bg-brand-blue-600 text-white rounded-md ${combinedClassName()}`}
       {...props}
     >
       {renderContent()}

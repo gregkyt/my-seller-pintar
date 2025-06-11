@@ -1,4 +1,3 @@
-import Container from "@/components/container";
 import Loading from "@/components/loading";
 import { Metadata } from "next";
 import { ReactNode, Suspense } from "react";
@@ -9,9 +8,5 @@ export const metadata: Metadata = {
 };
 
 export default function Layout({ children }: { children: ReactNode }) {
-  return (
-    <Suspense fallback={<Loading />}>
-      <Container>{children}</Container>
-    </Suspense>
-  );
+  return <Suspense fallback={<Loading />}>{children}</Suspense>;
 }

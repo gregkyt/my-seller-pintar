@@ -1,97 +1,60 @@
 "use client";
 
-import Button from "@/components/button";
-import Loading from "@/components/loading";
-import Toast, { ToastType } from "@/components/toast";
-import { FetchStatus } from "@/constants/fetch-status";
-import { ArticleFormData, ArticleSchema } from "@/forms/articles";
+import article from "@/app/articles/components/article";
+import OtherArticles from "@/app/articles/components/other-article";
 import { createArticleStore } from "@/stores/article-store";
-import { createCategoryStore } from "@/stores/category-store";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { createAuthStore } from "@/stores/auth-store";
+import dayjs from "dayjs";
+import { Dot } from "lucide-react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { useMemo } from "react";
-import { useForm } from "react-hook-form";
+import { useEffect } from "react";
 
 export default function ArticlePreview() {
-  const { setValue } = useForm<ArticleFormData>({
-    resolver: zodResolver(ArticleSchema),
-  });
+  const { previewArticle, getArticles } = createArticleStore();
+  const { profileData } = createAuthStore();
 
-  const {
-    previewArticle,
-    fetchStatusPage,
-    fetchStatusButton,
-    message,
-    setFetchStatusButton,
-    createArticle,
-  } = createArticleStore();
-  const { categories } = createCategoryStore();
+  useEffect(() => {
+    if (previewArticle.categoryId) {
+      const queryParams = {
+        page: 1,
+        limit: 3,
+        category: previewArticle.categoryId,
+      };
+      getArticles(queryParams);
+    }
+  }, [article]);
 
-  const router = useRouter();
-
-  const isLoading = useMemo(() => {
-    return fetchStatusPage === FetchStatus.LOADING;
-  }, [fetchStatusPage]);
-
-  function onSubmit() {
-    createArticle(previewArticle);
-  }
-
-  if (isLoading) return <Loading />;
   return (
-    <div className="p-4 flex flex-col gap-2">
-      <label className="font-bold text-2xl">Preview Article</label>
-      <Image
-        className="w-1/4 h-1/4"
-        src={`/api/image?url=${encodeURIComponent(
-          previewArticle.imageUrl ?? ""
-        )}`}
-        alt="image"
-        width={180}
-        height={180}
-      />
-      <label className="font-semibold text-xl">{previewArticle.title}</label>
-      <label className="text-lg">
-        {categories.find((item) => item.id === previewArticle.categoryId)?.name}
-      </label>
-      <div
-        className="mt-4"
-        dangerouslySetInnerHTML={{
-          __html: previewArticle.content ?? "",
-        }}
-      />
-      <div>
-        <Button label="Submit" onClick={() => onSubmit()} />
+    <div>
+      <div className="flex h-[1px] bg-brand-slate-200" />
+      <div className="py-10 md:px-[160px] px-5 justify-center text-brand-gray-900">
+        <span className="flex mt-2 justify-center text-sm ">
+          {dayjs(new Date()).format("MMMM DD, YYYY")}
+          <Dot />
+          Created by ${profileData?.username}
+        </span>
+        <div className="font-semibold text-3xl mt-4 text-center">
+          {previewArticle.title}
+        </div>
+        <div className="mt-10">
+          <Image
+            className="w-full h-auto rounded-xl"
+            src={`/api/image?url=${encodeURIComponent(
+              previewArticle.imageUrl ?? ""
+            )}`}
+            alt="image"
+            width={180}
+            height={180}
+          />
+        </div>
+        <div
+          className="mt-10"
+          dangerouslySetInnerHTML={{
+            __html: previewArticle.content ?? "",
+          }}
+        />
+        <OtherArticles />
       </div>
-      <Toast
-        isOpen={[FetchStatus.ERROR, FetchStatus.SUCCESS].includes(
-          fetchStatusButton
-        )}
-        text={
-          fetchStatusButton === FetchStatus.ERROR ? message : "Article created"
-        }
-        type={
-          fetchStatusButton === FetchStatus.ERROR
-            ? ToastType.ERROR
-            : ToastType.SUCCESS
-        }
-        onHide={() => {
-          if (fetchStatusButton === FetchStatus.ERROR)
-            setFetchStatusButton(FetchStatus.IDLE);
-          else if (fetchStatusButton === FetchStatus.SUCCESS) {
-            setFetchStatusButton(FetchStatus.IDLE);
-            const fields: (keyof ArticleFormData)[] = [
-              "title",
-              "content",
-              "categoryId",
-              "imageUrl",
-            ];
-            fields.forEach((item) => setValue(item, ""));
-            router.replace("/articles");
-          }
-        }}
-      />
     </div>
   );
 }

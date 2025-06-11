@@ -1,10 +1,13 @@
-import NavBar from "@/components/nav-bar";
 import { Cookies } from "@/constants/cookie";
+import { FileText, Tag } from "lucide-react";
 import { cookies, headers } from "next/headers";
-import { useMemo } from "react";
+import Image from "next/image";
+import { ReactNode, useMemo } from "react";
+import NavBar from "./nav-bar";
 
 interface Menu {
   id: string;
+  icon: ReactNode;
   label: string;
 }
 
@@ -17,8 +20,8 @@ export default function Container({ children }: { children: React.ReactNode }) {
   const pathname = headersList.get("x-url") || "";
 
   const allMenu: Menu[] = [
-    { id: "/articles", label: "Articles" },
-    { id: "/categories", label: "Categories" },
+    { id: "/admin/articles", icon: <FileText />, label: "Articles" },
+    { id: "/admin/categories", icon: <Tag />, label: "Categories" },
   ];
 
   const userMenu = () => {
@@ -42,7 +45,7 @@ export default function Container({ children }: { children: React.ReactNode }) {
       return (
         <li key={index}>
           <a
-            className={`hover:text-brand-blue hover:bg-white ${
+            className={`hover:text-brand-slate-900 hover:bg-white text-white ${
               pathname.includes(item.id) ? "font-bold" : ""
             }`}
             href={item.id}
@@ -62,7 +65,15 @@ export default function Container({ children }: { children: React.ReactNode }) {
           aria-label="close sidebar"
           className="drawer-overlay"
         />
-        <ul className="menu bg-white text-base min-h-full w-56 p-2">
+        <div className="w-full bg-brand-blue-600 p-4">
+          <Image
+            src="/logo_ipsum.png"
+            width={122}
+            height={22}
+            alt="logo_ipsum"
+          />
+        </div>
+        <ul className="menu bg-brand-blue-600 text-base min-h-full w-56 p-2">
           {renderMenu()}
         </ul>
       </>
@@ -78,7 +89,7 @@ export default function Container({ children }: { children: React.ReactNode }) {
         className="drawer-toggle"
       />
       <div className="drawer-content">
-        <NavBar />
+        <NavBar isAdmin />
         <div className={`bg-white`}>{children}</div>
       </div>
       <div className="drawer-side">{renderSideMenu()}</div>

@@ -3,7 +3,6 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
   const url = req.nextUrl.searchParams.get("url");
-  console.log(url);
   if (!url) {
     return new NextResponse("Missing image url", { status: 400 });
   }
@@ -30,8 +29,7 @@ export async function GET(req: NextRequest) {
         "Cache-Control": "public, max-age=86400",
       },
     });
-  } catch (error) {
-    console.log(error);
+  } catch {
     return NextResponse.json({ error: "Failed" }, { status: 500 });
   }
 }

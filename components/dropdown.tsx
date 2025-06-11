@@ -1,5 +1,6 @@
 "use client";
 
+import { ChevronDown } from "lucide-react";
 import { InputHTMLAttributes, useEffect, useState } from "react";
 import { UseFormRegisterReturn } from "react-hook-form";
 
@@ -53,31 +54,41 @@ export default function Dropdown({
 
   const renderAutoComplete = () => {
     return (
-      <>
-        <div className={`dropdown`}>
-          <input
-            tabIndex={0}
-            role="button"
-            type="text"
-            readOnly
-            className={`input input-bordered bg-white text-brand-blue "disabled:bg-brand-light-gray disabled:border-brand-light-gray" ${
-              error && "input-error"
-            }`}
-            onFocus={() => onChangeText(text)}
-            value={value}
-            {...register}
-            {...props}
-          />
+      <div>
+        <div className="dropdown w-full">
+          <div className="flex items-center w-full relative">
+            <input
+              tabIndex={0}
+              role="button"
+              type="text"
+              readOnly
+              className={`w-full input input-bordered text-brand-gray-900 bg-white "disabled:bg-brand-light-gray disabled:border-brand-light-gray" ${
+                error && "input-error"
+              }`}
+              onFocus={() => onChangeText(text)}
+              value={value}
+              {...register}
+              {...props}
+            />
+            <ChevronDown
+              className={`
+                absolute right-3 top-1/2 -translate-y-1/2
+                h-4 w-4 transition-transform duration-300
+                ${isOpen ? "rotate-180" : "rotate-0"}
+              `}
+            />
+          </div>
+
           {isOpen && (
             <ul
               tabIndex={0}
-              className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm"
+              className="dropdown-content menu bg-base-100 rounded-box z-10 w-full p-2 shadow-sm max-h-60 overflow-y-auto grid grid-cols-1"
             >
               {suggestions.map((item, index) => {
                 return (
                   <li key={index}>
                     <a
-                      className="text-brand-blue"
+                      className="text-brand-gray-900"
                       onClick={() => {
                         setText(item.value);
                         setIsOpen(false);
@@ -94,7 +105,7 @@ export default function Dropdown({
             </ul>
           )}
         </div>
-      </>
+      </div>
     );
   };
 
@@ -110,8 +121,8 @@ export default function Dropdown({
         }}
       >
         {label && (
-          <legend className="fieldset-legend text-base">
-            <span className="label-text text-brand-blue">{label}</span>
+          <legend className="fieldset-legend text-sm font-medium mb-[-8px]">
+            <span className="label-text text-brand-gray-900">{label}</span>
             {required && <span className="label-text text-red-600"> *</span>}
           </legend>
         )}

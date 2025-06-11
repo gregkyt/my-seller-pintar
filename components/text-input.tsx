@@ -30,16 +30,21 @@ export default function TextInput({
   const renderPassword = () => {
     return (
       <div
-        className={`input input-bordered w-full bg-white flex items-center gap-2 ${
+        className={`w-full input input-bordered text-brand-gray-900 bg-white flex items-center gap-2 ${
           error && "input-error"
         }`}
       >
         <input type={inputType} {...register} {...props} />
         {isShow ? (
-          <Eye className="w-5 h-5" onClick={() => onEye("password")} />
+          <Eye
+            className="w-4 h-4"
+            color="#475569"
+            onClick={() => onEye("password")}
+          />
         ) : (
           <EyeOff
-            className="w-5 h-5"
+            className="w-4 h-4"
+            color="#475569"
             onClick={() => {
               onEye("text");
             }}
@@ -52,7 +57,7 @@ export default function TextInput({
   const renderInput = () => {
     return (
       <input
-        className={`input input-bordered bg-white text-brand-blue ${
+        className={`w-full input input-bordered text-brand-gray-900 bg-white ${
           error && "input-error"
         }`}
         {...register}
@@ -65,8 +70,8 @@ export default function TextInput({
     <div {...props}>
       <fieldset className="fieldset">
         {label && (
-          <legend className="fieldset-legend text-base">
-            <span className="label-text text-brand-blue">{label}</span>
+          <legend className="fieldset-legend text-sm font-medium mb-[-8px]">
+            <span className="label-text text-brand-gray-900">{label}</span>
             {required && <span className="label-text text-red-600"> *</span>}
           </legend>
         )}

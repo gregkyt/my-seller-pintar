@@ -9,6 +9,7 @@ import { RegisterFormData, RegisterSchema } from "@/forms/register";
 import { RegisterPayload } from "@/modules/domain/auth-domain";
 import { createAuthStore } from "@/stores/auth-store";
 import { zodResolver } from "@hookform/resolvers/zod";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -50,10 +51,21 @@ export default function Register() {
     createUser(payload);
   }
 
+  function goToLogin() {
+    router.push("/");
+  }
+
   return (
-    <div className="p-4 flex h-screen justify-center">
-      <div className="flex flex-col justify-center">
-        <label className="font-bold text-2xl text-center">Login</label>
+    <div className="md:bg-brand-gray-100 flex h-screen w-screen justify-center items-center bg-white">
+      <div className="md:w-[400px] md:h-[452px] md:rounded-2xl md:p-4 p-6 md:bg-white w-full h-full flex flex-col justify-center">
+        <div className="flex justify-center items-center">
+          <Image
+            src="/logo_ipsum.png"
+            width={122}
+            height={22}
+            alt="logo_ipsum"
+          />
+        </div>
         <form className="flex flex-col mt-4" onSubmit={handleSubmit(onSubmit)}>
           <TextInput
             label="Username"
@@ -73,7 +85,7 @@ export default function Register() {
             placeholder="Input role..."
             error={errors.role?.message}
             register={register("role")}
-            value={watch("role")}
+            value={watch("role") ?? ""}
             data={data}
             onChange={(e) => {
               const value =
@@ -88,6 +100,15 @@ export default function Register() {
             isLoading={fetchStatusButton === FetchStatus.LOADING}
           />
         </form>
+        <div className="flex items-center justify-center text-sm mt-6">
+          <span>Already have an account? </span>
+          <button
+            className="btn-link text-brand-blue-600 ml-1"
+            onClick={goToLogin}
+          >
+            Login
+          </button>
+        </div>
       </div>
       <Toast
         isOpen={fetchStatusButton === FetchStatus.ERROR}
