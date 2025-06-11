@@ -3,7 +3,6 @@
 import Button, { IconPosition } from "@/components/button";
 import Dropdown, { getDropdownData } from "@/components/dropdown";
 import FileInput from "@/components/file-input";
-import TextEditor from "@/components/text-editor";
 import TextInput from "@/components/text-input";
 import Toast, { ToastType } from "@/components/toast";
 import { FetchStatus } from "@/constants/fetch-status";
@@ -17,7 +16,12 @@ import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import "react-quill/dist/quill.snow.css";
+
+import dynamic from "next/dynamic";
+
+const TextEditor = dynamic(() => import("@/components/text-editor"), {
+  ssr: false,
+});
 
 export default function ArticleAdd() {
   const {
